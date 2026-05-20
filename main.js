@@ -14,12 +14,12 @@ const commands = {
   windows: {
     standard: {
       title: "Windows PowerShell · 标准安装",
-      command: "irm https://deepy.kirineko.tech/install.ps1 | iex",
+      command: 'powershell -ExecutionPolicy ByPass -c "irm https://deepy.kirineko.tech/install.ps1 | iex"',
       script: "/install.ps1",
     },
     china: {
       title: "Windows PowerShell · 中国镜像加速",
-      command: "irm https://deepy.kirineko.tech/install-zh.ps1 | iex",
+      command: 'powershell -ExecutionPolicy ByPass -c "irm https://deepy.kirineko.tech/install-zh.ps1 | iex"',
       script: "/install-zh.ps1",
     },
   },

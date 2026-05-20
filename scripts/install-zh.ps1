@@ -7,32 +7,76 @@ function Write-DeepyInfo {
   Write-Host "[deepy] $Message"
 }
 
-function Install-Uv {
-  Write-DeepyInfo "uv not found; installing uv with the upstream installer."
-  Invoke-RestMethod -Uri "https://astral.sh/uv/install.ps1" | Invoke-Expression
-}
+function Add-PathEntry {
+  param([string]$PathEntry)
 
-$uvCommand = Get-Command uv -ErrorAction SilentlyContinue
-if ($uvCommand) {
-  $uvBin = $uvCommand.Source
-  Write-DeepyInfo "Using existing uv command."
-} else {
-  Install-Uv
-  $uvCommand = Get-Command uv -ErrorAction SilentlyContinue
-  if ($uvCommand) {
-    $uvBin = $uvCommand.Source
-  } else {
-    $localUv = Join-Path $HOME ".local\bin\uv.exe"
-    if (Test-Path $localUv) {
-      $uvBin = $localUv
-    } else {
-      Write-Error "Error: uv not found after installation. Restart PowerShell and try again."
-      exit 1
-    }
+  if ([string]::IsNullOrWhiteSpace($PathEntry) -or -not (Test-Path -LiteralPath $PathEntry -PathType Container)) {
+    return
+  }
+
+  $separator = [System.IO.Path]::PathSeparator
+  $entries = $env:Path -split [regex]::Escape($separator)
+  if ($entries -notcontains $PathEntry) {
+    $env:Path = "$PathEntry$separator$env:Path"
   }
 }
 
-Write-DeepyInfo "Installing Deepy with Python 3.13 using the Tsinghua PyPI mirror for this command only."
-Write-DeepyInfo "This script does not modify uv.toml, pip.conf, or persistent Python tooling configuration."
+function Refresh-UvPath {
+  Add-PathEntry $env:UV_INSTALL_DIR
+  Add-PathEntry (Join-Path $HOME ".local\bin")
+
+  if ($env:USERPROFILE) {
+    Add-PathEntry (Join-Path $env:USERPROFILE ".local\bin")
+  }
+}
+
+function Find-Uv {
+  Refresh-UvPath
+
+  $uvCommand = Get-Command uv -ErrorAction SilentlyContinue
+  if ($uvCommand) {
+    return $uvCommand.Source
+  }
+
+  $localUv = Join-Path $HOME ".local\bin\uv.exe"
+  if (Test-Path -LiteralPath $localUv -PathType Leaf) {
+    return $localUv
+  }
+
+  if ($env:USERPROFILE) {
+    $profileUv = Join-Path $env:USERPROFILE ".local\bin\uv.exe"
+    if (Test-Path -LiteralPath $profileUv -PathType Leaf) {
+      return $profileUv
+    }
+  }
+
+  return $null
+}
+
+function Install-Uv {
+  Write-DeepyInfo "Installing uv."
+  try {
+    $env:UV_NO_PROGRESS = "1"
+    $installer = Invoke-RestMethod -Uri "https://astral.sh/uv/install.ps1"
+    Invoke-Expression $installer 1>$null 3>$null 4>$null 6>$null
+  } catch {
+    Write-Error "Error: uv installation was blocked or failed. If Windows security policy, AppLocker, Smart App Control, or antivirus blocked the downloaded script, allow scripts from deepy.kirineko.tech and astral.sh or ask an administrator to run the installer. Details: $($_.Exception.Message)"
+    exit 1
+  } finally {
+    Remove-Item Env:\UV_NO_PROGRESS -ErrorAction SilentlyContinue
+  }
+}
+
+$uvBin = Find-Uv
+if (-not $uvBin) {
+  Install-Uv
+  $uvBin = Find-Uv
+  if (-not $uvBin) {
+    Write-Error "Error: uv not found after installation. Restart PowerShell and try again."
+    exit 1
+  }
+}
+
+Write-DeepyInfo "Installing Deepy."
 & $uvBin tool install --python 3.13 deepy-cli --default-index $TunaIndex
-Write-DeepyInfo "Done. Run 'deepy --version' to verify the installation."
+Write-DeepyInfo "Done."
