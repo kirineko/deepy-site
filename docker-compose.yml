@@ -3,5 +3,5 @@ services:
     build: .
     image: deepy-site:local
     ports:
-      - "8080:80"
+      - "18080:80"
     restart: unless-stopped

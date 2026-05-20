@@ -8,7 +8,7 @@ Static website for `deepy.kirineko.tech`.
 docker compose up --build
 ```
 
-Open `http://localhost:8080`.
+Open `http://localhost:18080`.
 
 ## Screenshot Asset
 
