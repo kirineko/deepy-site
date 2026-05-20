@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Deepy 是面向 DeepSeek 的终端编程 Agent。通过 POSIX 或 Windows PowerShell 一键安装。">
+    <title>Deepy - 终端里的 DeepSeek 编程 Agent</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Deepy home">
+        <span class="brand-mark">D</span>
+        <span>Deepy</span>
+      </a>
+      <nav class="nav" aria-label="主要导航">
+        <a href="#install">安装</a>
+        <a href="#preview">界面</a>
+        <a href="#features">功能</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="install-section" id="install">
+        <div class="install-copy">
+          <h1>安装 Deepy</h1>
+          <p>面向 DeepSeek 的终端编程 Agent。</p>
+          <div class="quick-points" aria-label="安装特点">
+            <span>一键安装</span>
+            <span>国内镜像</span>
+            <span>跨平台终端</span>
+          </div>
+        </div>
+
+        <div class="installer" aria-label="安装命令选择器">
+          <div class="segmented" role="tablist" aria-label="选择系统">
+            <button class="segment" type="button" data-os="posix" role="tab" aria-selected="false">macOS / Linux</button>
+            <button class="segment is-active" type="button" data-os="windows" role="tab" aria-selected="true">Windows PowerShell</button>
+          </div>
+
+          <div class="mode-row" role="group" aria-label="选择安装模式">
+            <button class="mode" type="button" data-mode="standard">标准安装</button>
+            <button class="mode is-active" type="button" data-mode="china">中国镜像加速</button>
+          </div>
+
+          <div class="command-card">
+            <div class="command-meta">
+              <span id="commandTitle">Windows PowerShell · 中国镜像加速</span>
+              <a id="scriptLink" href="/install-zh.ps1">查看脚本</a>
+            </div>
+            <pre aria-live="polite"><code id="installCommand">irm https://deepy.kirineko.tech/install-zh.ps1 | iex</code></pre>
+            <button class="copy-button" type="button" id="copyCommand">复制命令</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="preview-section" id="preview">
+        <div class="section-heading">
+          <h2>终端界面预览</h2>
+        </div>
+        <figure class="preview-frame">
+          <img src="/assets/deepy-ui.webp" alt="Deepy 终端界面预览" loading="lazy">
+        </figure>
+      </section>
+
+      <section class="features-section" id="features">
+        <div class="section-heading">
+          <h2>核心功能</h2>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <span class="feature-icon">DS</span>
+            <h3>DeepSeek Thinking</h3>
+            <p>复杂任务先想清楚，再执行修改和验证。</p>
+          </article>
+          <article>
+            <span class="feature-icon">DF</span>
+            <h3>可审查 Diff</h3>
+            <p>每次改动都清楚展示，方便你确认后继续。</p>
+          </article>
+          <article>
+            <span class="feature-icon">SH</span>
+            <h3>跨平台 Shell</h3>
+            <p>在 macOS、Linux 和 Windows 终端中都能使用。</p>
+          </article>
+          <article>
+            <span class="feature-icon">WB</span>
+            <h3>WebSearch / WebFetch</h3>
+            <p>需要资料时直接联网搜索和读取网页。</p>
+          </article>
+          <article>
+            <span class="feature-icon">SS</span>
+            <h3>长会话恢复</h3>
+            <p>中断后继续同一个项目会话。</p>
+          </article>
+          <article>
+            <span class="feature-icon">SK</span>
+            <h3>Skill 市场</h3>
+            <p>安装常用能力，让 Deepy 承担更多固定工作流。</p>
+          </article>
+          <article>
+            <span class="feature-icon">RL</span>
+            <h3>Rules 规则</h3>
+            <p>把你的项目约定交给 Deepy，回答和改动更贴合团队习惯。</p>
+          </article>
+          <article>
+            <span class="feature-icon">LC</span>
+            <h3>本地命令模式</h3>
+            <p>直接运行本地命令，快速完成测试、构建和检查。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Deepy</span>
+      <a href="https://github.com/kirineko/deepy">GitHub</a>
+    </footer>
+
+    <script src="/main.js"></script>
+  </body>
+</html>
